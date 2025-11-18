@@ -1,0 +1,14 @@
+body {
+  font-family: 'Arial', sans-serif;
+}
+
+.deep-blue {
+  background-color: #0B3D91;
+}
+
+.card {
+  background-color: white;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
