@@ -1,192 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PCEA Center Church</title>
-
-<style>
-  body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background: #f4f7ff;
-  }
-
-  header {
-    background: #1e3a8a;
-    color: white;
-    padding: 20px;
-    text-align: center;
-  }
-
-  nav {
-    background: #274bcf;
-    padding: 10px;
-    text-align: center;
-  }
-
-  nav a {
-    color: white;
-    margin: 10px;
-    text-decoration: none;
-    font-weight: bold;
-    padding: 8px 14px;
-    background: #1e3a8a;
-    border-radius: 6px;
-  }
-
-  nav a:hover {
-    background: #16327a;
-  }
-
-  section {
-    padding: 25px;
-    margin: 20px;
-    background: white;
-    border-radius: 10px;
-  }
-
-  footer {
-    background: #1e3a8a;
-    color: white;
-    text-align: center;
-    padding: 10px;
-    margin-top: 30px;
-  }
-
-  .event {
-    padding: 10px;
-    background: #eef2ff;
-    border-left: 5px solid #1e3a8a;
-    margin-bottom: 12px;
-    border-radius: 6px;
-  }
-
-  .btn {
-    background: #274bcf;
-    color: white;
-    padding: 10px 16px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-top: 10px;
-    display: inline-block;
-    text-decoration: none;
-  }
-
-  .btn:hover {
-    background: #1e3a8a;
-  }
-
-</style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCEA Center Youth Portal v1.1</title>
+    <!-- Favicon -->
+    <link rel="icon" href="assets/logo.png" type="image/png">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Header / Navbar -->
+    <header>
+        <img src="assets/logo.png" alt="PCEA Logo" class="logo">
+        <h1>PCEA Center Youth Portal</h1>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#events">Events</a></li>
+                <li><a href="#media">Media</a></li>
+                <li><a href="#chat">Chat/Forum</a></li>
+                <li><a href="#prayers">Prayers</a></li>
+                <li><a href="#donate">Donate</a></li>
+            </ul>
+        </nav>
+    </header>
 
-<header>
-  <h1>PCEA CENTER CHURCH</h1>
-  <p>Growing in Christ • Serving in Love • Worshiping in Spirit</p>
-</header>
+    <!-- Main Section -->
+    <main id="home">
+        <section class="hero">
+            <h2>Welcome to PCEA Center Youth Portal v1.1</h2>
+            <p>Connect, Pray, and Engage with your Youth Fellowship</p>
+        </section>
 
-<nav>
-  <a href="#home">Home</a>
-  <a href="#about">About</a>
-  <a href="#ministries">Ministries</a>
-  <a href="#events">Events</a>
-  <a href="#contact">Contact</a>
-  <a href="#login">Login</a>
-</nav>
+        <!-- Event Section -->
+        <section id="events">
+            <h3>Upcoming Events</h3>
+            <ul id="event-list">
+                <li>No events scheduled yet.</li>
+            </ul>
+        </section>
 
-<!---------------- HOME ---------------->
-<section id="home">
-  <h2>Welcome to PCEA Center Church</h2>
-  <p>
-    We are a Christ-centered community committed to spiritual growth, 
-    fellowship, and service. Join us every Sunday and experience the love of God.
-  </p>
-</section>
+        <!-- Media Gallery -->
+        <section id="media">
+            <h3>Photos & Videos</h3>
+            <div class="media-gallery">
+                <!-- Example Media -->
+                <img src="assets/sample-photo.jpg" alt="Youth Event">
+            </div>
+        </section>
 
-<!---------------- ABOUT ---------------->
-<section id="about">
-  <h2>About Us</h2>
-  <p>
-    PCEA Center Church is part of the Presbyterian Church of East Africa.
-    We believe in strong doctrine, worship, fellowship, and youth empowerment.
-  </p>
-</section>
+        <!-- Prayer Requests -->
+        <section id="prayers">
+            <h3>Submit Your Prayer Requests</h3>
+            <form id="prayer-form">
+                <input type="text" placeholder="Your Name" required>
+                <textarea placeholder="Your Prayer Request" required></textarea>
+                <button type="submit">Submit</button>
+            </form>
+        </section>
 
-<!---------------- MINISTRIES ---------------->
-<section id="ministries">
-  <h2>Our Ministries</h2>
-  <ul>
-    <li>Youth Ministries</li>
-    <li>Women Guild</li>
-    <li>Men Fellowship</li>
-    <li>Brigade</li>
-    <li>Choir & Worship Team</li>
-  </ul>
-</section>
+        <!-- Donations -->
+        <section id="donate">
+            <h3>Support Our Youth Fellowship</h3>
+            <button id="donate-btn">Donate via MPESA</button>
+        </section>
+    </main>
 
-<!---------------- EVENTS ---------------->
-<section id="events">
-  <h2>Upcoming Events</h2>
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 PCEA Center Youth Portal. To God be the Glory.</p>
+    </footer>
 
-  <div class="event">
-    <b>Youth Jumbo Sale</b><br>
-    Date: 27th April 2025<br>
-    Venue: PCEA Center Church Grounds
-  </div>
-
-  <div class="event">
-    <b>Sunday Worship</b><br>
-    Every Sunday – 9:00 AM
-  </div>
-
-  <div class="event">
-    <b>Weekly Bible Study</b><br>
-    Saturday – 3:00 PM
-  </div>
-</section>
-
-<!---------------- CONTACT ---------------->
-<section id="contact">
-  <h2>Contact Us</h2>
-  <p><b>Phone:</b> +254 7xx xxx xxx</p>
-  <p><b>Email:</b> info@pceacenterchurch.org</p>
-  <p><b>Location:</b> Near Center Area, Kenya</p>
-</section>
-
-<!---------------- LOGIN ---------------->
-<section id="login">
-  <h2>Member Login</h2>
-  <p>Enter your details to access the members section.</p>
-
-  <input type="text" id="user" placeholder="Username" style="padding:10px;width:90%;margin-bottom:10px;">
-  <input type="password" id="pass" placeholder="Password" style="padding:10px;width:90%;margin-bottom:10px;">
-
-  <button class="btn" onclick="login()">Login</button>
-
-  <p id="msg" style="color:red;margin-top:10px;"></p>
-</section>
-
-<footer>
-  © 2025 PCEA Center Church • All Rights Reserved
-</footer>
-
-<script>
-  function login() {
-    let u = document.getElementById("user").value;
-    let p = document.getElementById("pass").value;
-
-    if (u === "leader" && p === "center123") {
-      document.getElementById("msg").style.color = "green";
-      document.getElementById("msg").innerText = "Login successful!";
-      setTimeout(() => alert("Welcome Leader!"), 300);
-    } else {
-      document.getElementById("msg").innerText = "Incorrect username or password!";
-    }
-  }
-</script>
-
+    <!-- Scripts -->
+    <script src="script.js"></script>
 </body>
-                                  </html>
+  </html>
