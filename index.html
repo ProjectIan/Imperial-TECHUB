@@ -1,0 +1,154 @@
+import React, { useEffect, useState } from "react";
+
+// Imperial TECHUB - Single-file React component (Tailwind CSS ready) // Features: // - Hero section // - Services / Projects grid // - Text-to-Speech demo (Web Speech API) // - Contact form (front-end only) // - Dark / Light theme toggle
+
+export default function ImperialTechHub() { const [dark, setDark] = useState(false); const [voices, setVoices] = useState([]); const [voiceIndex, setVoiceIndex] = useState(0); const [ttsText, setTtsText] = useState("Welcome to Imperial TECHUB — your tech innovation hub."); const [speaking, setSpeaking] = useState(false);
+
+useEffect(() => { // theme handling if (dark) document.documentElement.classList.add("dark"); else document.documentElement.classList.remove("dark"); }, [dark]);
+
+useEffect(() => { // Load available voices function loadVoices() { const synth = window.speechSynthesis; const available = synth.getVoices(); setVoices(available); }
+
+loadVoices();
+// Some browsers load voices asynchronously
+window.speechSynthesis.onvoiceschanged = loadVoices;
+return () => {
+  window.speechSynthesis.onvoiceschanged = null;
+};
+
+}, []);
+
+function speak() { if (!('speechSynthesis' in window)) { alert('Text-to-speech is not supported in this browser. Use Chrome, Edge, or Safari.'); return; } const synth = window.speechSynthesis; synth.cancel(); const utter = new SpeechSynthesisUtterance(ttsText || ''); if (voices.length && voices[voiceIndex]) utter.voice = voices[voiceIndex]; utter.onend = () => setSpeaking(false); utter.onerror = () => setSpeaking(false); setSpeaking(true); synth.speak(utter); }
+
+function stop() { window.speechSynthesis.cancel(); setSpeaking(false); }
+
+return ( <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 transition-colors duration-300"> <header className="max-w-6xl mx-auto p-6 flex items-center justify-between"> <div className="flex items-center gap-4"> <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-600 to-emerald-400 flex items-center justify-center shadow-lg"> <span className="font-bold text-white">IT</span> </div> <div> <h1 className="text-xl font-extrabold">Imperial TECHUB</h1> <p className="text-sm opacity-80">Innovation • Learning • Launch</p> </div> </div>
+
+<nav className="flex items-center gap-4">
+      <a href="#about" className="text-sm hover:underline">About</a>
+      <a href="#services" className="text-sm hover:underline">Services</a>
+      <a href="#projects" className="text-sm hover:underline">Projects</a>
+      <a href="#contact" className="text-sm hover:underline">Contact</a>
+
+      <button
+        onClick={() => setDark(!dark)}
+        className="ml-4 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
+        aria-label="Toggle theme"
+      >
+        {dark ? 'Light' : 'Dark'}
+      </button>
+    </nav>
+  </header>
+
+  <main className="max-w-6xl mx-auto p-6 space-y-12">
+    {/* Hero */}
+    <section className="grid md:grid-cols-2 gap-8 items-center">
+      <div>
+        <h2 className="text-4xl font-extrabold leading-tight">Build. Learn. Scale.</h2>
+        <p className="mt-4 text-lg opacity-85">Imperial TECHUB is a community-driven hub for developers, founders, and creators — offering mentorship, project collaboration, and hands-on workshops.</p>
+
+        <div className="mt-6 flex gap-3">
+          <a href="#projects" className="px-5 py-3 rounded-lg bg-indigo-600 text-white font-semibold shadow">Explore Projects</a>
+          <a href="#contact" className="px-5 py-3 rounded-lg border border-slate-200 dark:border-slate-700">Get in Touch</a>
+        </div>
+
+        <div className="mt-8 p-5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
+          <h3 className="font-semibold">Text-to-Speech Demo</h3>
+          <p className="text-sm opacity-80 mt-2">Type something and hear it spoken using your browser's speech synthesis.</p>
+
+          <textarea
+            value={ttsText}
+            onChange={(e) => setTtsText(e.target.value)}
+            className="w-full mt-3 p-3 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700"
+            rows={3}
+          />
+
+          <div className="mt-3 flex flex-wrap gap-3 items-center">
+            <label className="text-sm">Voice:</label>
+            <select
+              value={voiceIndex}
+              onChange={(e) => setVoiceIndex(Number(e.target.value))}
+              className="rounded-md p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700"
+            >
+              {voices.length === 0 && <option>Loading voices…</option>}
+              {voices.map((v, i) => (
+                <option key={i} value={i}>{v.name} {v.lang ? `(${v.lang})` : ''}</option>
+              ))}
+            </select>
+
+            <button onClick={speak} disabled={speaking} className="px-4 py-2 rounded-md bg-emerald-500 text-white font-medium">Speak</button>
+            <button onClick={stop} className="px-4 py-2 rounded-md bg-red-500 text-white font-medium">Stop</button>
+            <span className="text-sm opacity-70">{speaking ? 'Speaking…' : ''}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-2xl p-8 bg-gradient-to-br from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 border border-slate-100 dark:border-slate-700 shadow-lg">
+        <h3 className="font-semibold">Our Focus Areas</h3>
+        <ul className="mt-4 space-y-3">
+          <li className="p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-700">Workshops & Bootcamps</li>
+          <li className="p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-700">Startup Mentorship</li>
+          <li className="p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-700">Community Projects</li>
+          <li className="p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-700">Open Source Labs</li>
+        </ul>
+      </div>
+    </section>
+
+    {/* About */}
+    <section id="about" className="p-6 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
+      <h3 className="text-2xl font-bold">About Imperial TECHUB</h3>
+      <p className="mt-3 opacity-85">We connect learners, coders, designers and entrepreneurs to build meaningful products. From idea-stage startups to production-ready apps — our goal is to help you ship faster.</p>
+    </section>
+
+    {/* Services */}
+    <section id="services">
+      <h3 className="text-2xl font-bold">Services</h3>
+      <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="p-4 rounded-lg bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-700">Mentorship</div>
+        <div className="p-4 rounded-lg bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-700">Co-working</div>
+        <div className="p-4 rounded-lg bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-700">Funding Access</div>
+        <div className="p-4 rounded-lg bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-700">Technical Reviews</div>
+      </div>
+    </section>
+
+    {/* Projects */}
+    <section id="projects">
+      <h3 className="text-2xl font-bold">Selected Projects</h3>
+      <div className="mt-6 grid md:grid-cols-3 gap-4">
+        <div className="p-4 rounded-lg bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-700">Project A — Community App</div>
+        <div className="p-4 rounded-lg bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-700">Project B — E-commerce MVP</div>
+        <div className="p-4 rounded-lg bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-700">Project C — Education Platform</div>
+      </div>
+    </section>
+
+    {/* Contact */}
+    <section id="contact" className="p-6 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
+      <h3 className="text-2xl font-bold">Contact Us</h3>
+      <p className="mt-2 opacity-80">Have an idea? Want to collaborate? Drop a message below.</p>
+
+      <form className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <input placeholder="Your name" className="p-3 rounded-md bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-700" />
+        <input placeholder="Email" className="p-3 rounded-md bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-700" />
+        <textarea placeholder="Message" className="p-3 rounded-md bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-700 sm:col-span-2" rows={4} />
+        <button type="button" className="sm:col-span-2 px-5 py-3 rounded-lg bg-indigo-600 text-white">Send Message</button>
+      </form>
+    </section>
+
+  </main>
+
+  <footer className="border-t border-slate-100 dark:border-slate-800 mt-12 p-6">
+    <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <strong>Imperial TECHUB</strong>
+        <p className="text-sm opacity-80">© {new Date().getFullYear()} Imperial TECHUB. All rights reserved.</p>
+      </div>
+
+      <div className="flex gap-4">
+        <a className="text-sm hover:underline">Privacy</a>
+        <a className="text-sm hover:underline">Terms</a>
+        <a className="text-sm hover:underline">Twitter</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+); }
