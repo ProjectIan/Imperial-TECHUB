@@ -1,191 +1,192 @@
-/* Imperial TECHUB - Full single-file React website
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PCEA Center Church</title>
 
-Features included (single-file demo):
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7ff;
+  }
 
-Tailwind CSS utility classes (assumes Tailwind is set up in host project)
+  header {
+    background: #1e3a8a;
+    color: white;
+    padding: 20px;
+    text-align: center;
+  }
 
-Simple client-side routing (no react-router)
+  nav {
+    background: #274bcf;
+    padding: 10px;
+    text-align: center;
+  }
 
-Mock authentication (signup/login) stored in localStorage
+  nav a {
+    color: white;
+    margin: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 8px 14px;
+    background: #1e3a8a;
+    border-radius: 6px;
+  }
 
-Member limit control (configurable)
+  nav a:hover {
+    background: #16327a;
+  }
 
-Leader-only access (separate leader password)
+  section {
+    padding: 25px;
+    margin: 20px;
+    background: white;
+    border-radius: 10px;
+  }
 
-Media upload (image & video previews, stored in memory)
+  footer {
+    background: #1e3a8a;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    margin-top: 30px;
+  }
 
-Call / contact button (tel: link)
+  .event {
+    padding: 10px;
+    background: #eef2ff;
+    border-left: 5px solid #1e3a8a;
+    margin-bottom: 12px;
+    border-radius: 6px;
+  }
 
-Announcements, Events, Blog placeholder
+  .btn {
+    background: #274bcf;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+    display: inline-block;
+    text-decoration: none;
+  }
 
-Admin panel to manage member limit, announcements, and view uploads
+  .btn:hover {
+    background: #1e3a8a;
+  }
 
+</style>
 
-How to use:
+</head>
+<body>
 
-1. Create a React app (Vite / CRA) and configure Tailwind.
+<header>
+  <h1>PCEA CENTER CHURCH</h1>
+  <p>Growing in Christ • Serving in Love • Worshiping in Spirit</p>
+</header>
 
+<nav>
+  <a href="#home">Home</a>
+  <a href="#about">About</a>
+  <a href="#ministries">Ministries</a>
+  <a href="#events">Events</a>
+  <a href="#contact">Contact</a>
+  <a href="#login">Login</a>
+</nav>
 
-2. Drop this file as ImperialTechubApp.jsx and import into your main entry (e.g. App.jsx).
+<!---------------- HOME ---------------->
+<section id="home">
+  <h2>Welcome to PCEA Center Church</h2>
+  <p>
+    We are a Christ-centered community committed to spiritual growth, 
+    fellowship, and service. Join us every Sunday and experience the love of God.
+  </p>
+</section>
 
+<!---------------- ABOUT ---------------->
+<section id="about">
+  <h2>About Us</h2>
+  <p>
+    PCEA Center Church is part of the Presbyterian Church of East Africa.
+    We believe in strong doctrine, worship, fellowship, and youth empowerment.
+  </p>
+</section>
 
-3. This is a demo; replace mock functions with real backend calls (Firebase, Supabase, or your REST API).
+<!---------------- MINISTRIES ---------------->
+<section id="ministries">
+  <h2>Our Ministries</h2>
+  <ul>
+    <li>Youth Ministries</li>
+    <li>Women Guild</li>
+    <li>Men Fellowship</li>
+    <li>Brigade</li>
+    <li>Choir & Worship Team</li>
+  </ul>
+</section>
 
+<!---------------- EVENTS ---------------->
+<section id="events">
+  <h2>Upcoming Events</h2>
 
-
-Default export: ImperialTechubApp */
-
-import React, { useEffect, useState, useRef } from 'react';
-
-export default function ImperialTechubApp(){ // ------- Configuration ------- const MEMBER_LIMIT_KEY = 'it_member_limit'; const USERS_KEY = 'it_users'; const ANNOUNCEMENTS_KEY = 'it_announcements'; const LEADER_PASSWORD = 'leader@imperial'; // change in production
-
-// ------- App State ------- const [page, setPage] = useState('home'); const [user, setUser] = useState(null); const [isLeader, setIsLeader] = useState(false); const [memberLimit, setMemberLimit] = useState(() => { const raw = localStorage.getItem(MEMBER_LIMIT_KEY); return raw ? Number(raw) : 200; });
-
-const [users, setUsers] = useState(() => { try{ return JSON.parse(localStorage.getItem(USERS_KEY)) || []; }catch(e){return []} });
-
-const [announcements, setAnnouncements] = useState(()=>{ try{ return JSON.parse(localStorage.getItem(ANNOUNCEMENTS_KEY))||[] }catch(e){return[]} });
-
-const [uploads, setUploads] = useState([]); // in-memory only
-
-useEffect(()=>{ localStorage.setItem(MEMBER_LIMIT_KEY, String(memberLimit)) }, [memberLimit]); useEffect(()=>{ localStorage.setItem(USERS_KEY, JSON.stringify(users)) }, [users]); useEffect(()=>{ localStorage.setItem(ANNOUNCEMENTS_KEY, JSON.stringify(announcements)) }, [announcements]);
-
-// ------- Auth Functions ------- function signup({name,email,password,leaderPass}){ if(users.length >= memberLimit){ alert('Member limit reached. Contact an admin.'); return false; } if(users.find(u=>u.email===email)){ alert('Email already registered'); return false; } const newUser = {id:Date.now(), name, email, password, createdAt: new Date().toISOString(), role: leaderPass===LEADER_PASSWORD? 'leader':'member'}; setUsers(prev=>[...prev,newUser]); localStorage.setItem('it_session', JSON.stringify({id:newUser.id})); setUser(newUser); setIsLeader(newUser.role==='leader'); setPage('dashboard'); return true; }
-
-function login({email,password}){ const found = users.find(u=>u.email===email && u.password===password); if(!found){ alert('Invalid credentials'); return false; } localStorage.setItem('it_session', JSON.stringify({id:found.id})); setUser(found); setIsLeader(found.role==='leader'); setPage('dashboard'); return true; }
-
-function logout(){ localStorage.removeItem('it_session'); setUser(null); setIsLeader(false); setPage('home'); }
-
-useEffect(()=>{ const sess = localStorage.getItem('it_session'); if(sess){ try{ const {id} = JSON.parse(sess); const u = users.find(x=>x.id===id); if(u){ setUser(u); setIsLeader(u.role==='leader'); } }catch(e){} } },[]);
-
-// ------- Upload handlers ------- const imageInputRef = useRef(); const videoInputRef = useRef();
-
-function handleImageUpload(e){ const file = e.target.files?.[0]; if(!file) return; const url = URL.createObjectURL(file); setUploads(prev=>[{id:Date.now(), type:'image', name:file.name, url, owner:user?.email||'guest'}, ...prev]); } function handleVideoUpload(e){ const file = e.target.files?.[0]; if(!file) return; const url = URL.createObjectURL(file); setUploads(prev=>[{id:Date.now(), type:'video', name:file.name, url, owner:user?.email||'guest'}, ...prev]); }
-
-// ------- Admin actions ------- function addAnnouncement(text){ const a = {id:Date.now(), text, date: new Date().toISOString(), by: user?.name||'System'}; setAnnouncements(prev=>[a,...prev]); }
-
-function removeUser(id){ setUsers(prev=>prev.filter(u=>u.id!==id)); }
-
-// ------- UI Components (in-file for simplicity) ------- function Nav(){ return ( <nav className="w-full bg-gradient-to-r from-sky-700 to-indigo-700 text-white p-4 flex items-center justify-between"> <div className="flex items-center gap-3"> <div className="rounded-full bg-white/20 w-10 h-10 flex items-center justify-center font-bold">IT</div> <div> <div className="font-bold">Imperial TECHUB</div> <div className="text-xs opacity-80">Innovate • Teach • Scale</div> </div> </div> <div className="flex items-center gap-3"> <button onClick={()=>setPage('home')} className="hover:underline">Home</button> <button onClick={()=>setPage('about')} className="hover:underline">About</button> <button onClick={()=>setPage('projects')} className="hover:underline">Projects</button> <button onClick={()=>setPage('community')} className="hover:underline">Community</button> <button onClick={()=>setPage('contact')} className="hover:underline">Contact</button> {user ? ( <div className="flex items-center gap-2"> <div className="text-sm">Hi, {user.name}</div> <button onClick={()=>setPage('dashboard')} className="bg-white/20 px-3 py-1 rounded">Dashboard</button> <button onClick={logout} className="bg-white/10 px-3 py-1 rounded">Logout</button> </div> ) : ( <div className="flex gap-2"> <button onClick={()=>setPage('login')} className="bg-white/20 px-3 py-1 rounded">Login</button> <button onClick={()=>setPage('signup')} className="bg-white/10 px-3 py-1 rounded">Sign up</button> </div> )} </div> </nav> ) }
-
-function Home(){ return ( <div className="p-8"> <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center"> <div> <h1 className="text-4xl font-extrabold">Welcome to Imperial TECHUB</h1> <p className="mt-4 text-gray-700">We train, build, and launch tech projects — from hack nights to deployed products. Join our community of makers.</p> <div className="mt-6 flex gap-3"> <button onClick={()=>setPage('signup')} className="px-5 py-3 bg-indigo-600 text-white rounded shadow">Join the Hub</button> <a href="tel:+254700000000" className="px-5 py-3 border rounded">Call Us</a> </div> <div className="mt-6 bg-white p-4 rounded shadow"> <h3 className="font-bold">Announcements</h3> <ul className="mt-2 space-y-2 max-h-40 overflow-auto"> {announcements.length===0 && <li className="text-sm text-gray-500">No announcements yet.</li>} {announcements.map(a=> ( <li key={a.id} className="text-sm">• {a.text} <span className="text-xs text-gray-400">({new Date(a.date).toLocaleString()})</span></li> ))} </ul> </div> </div> <div> <div className="bg-gradient-to-br from-slate-50 to-white p-6 rounded shadow"> <h3 className="font-bold">Latest Projects</h3> <div className="mt-4 grid grid-cols-1 gap-4"> <Card title="Imperial LMS" desc="Lightweight learning platform for community courses." /> <Card title="JobBoard" desc="Local tech gigs and volunteer opportunities." /> <Card title="Micro-VC Pitch" desc="Support small teams with micro-grants." /> </div> </div> </div> </section>
-
-<section className="mt-10">
-      <h2 className="font-bold text-2xl">Media Gallery</h2>
-      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {uploads.length===0 && <div className="text-gray-500">No uploads yet. Members can upload images and videos in the dashboard.</div>}
-        {uploads.map(u=> (
-          <div key={u.id} className="border rounded p-2">
-            {u.type==='image' ? (<img src={u.url} alt={u.name} className="w-full h-40 object-cover rounded"/>) : (
-              <video src={u.url} controls className="w-full h-40 object-cover rounded" />
-            )}
-            <div className="text-xs mt-2">{u.name} • by {u.owner}</div>
-          </div>
-        ))}
-      </div>
-    </section>
-
+  <div class="event">
+    <b>Youth Jumbo Sale</b><br>
+    Date: 27th April 2025<br>
+    Venue: PCEA Center Church Grounds
   </div>
-)
 
-}
-
-function Card({title,desc}){ return ( <div className="bg-white p-3 rounded shadow-sm"> <div className="font-semibold">{title}</div> <div className="text-sm text-gray-600">{desc}</div> <div className="mt-2"><button className="text-sm underline">View</button></div> </div> ) }
-
-function About(){ return ( <div className="p-8"> <h2 className="font-bold text-2xl">About Imperial TECHUB</h2> <p className="mt-4">We are a community-run tech hub focusing on skills, startups and community projects. We run weekly trainings, mentorship, and small grants.</p> </div> ) }
-
-function Projects(){ return ( <div className="p-8"> <h2 className="font-bold text-2xl">Projects</h2> <p className="mt-4">Browse our active projects and contribute.</p> </div> ) }
-
-function Community(){ return ( <div className="p-8"> <h2 className="font-bold text-2xl">Community</h2> <p className="mt-4">Members: {users.length} / {memberLimit}</p> <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4"> {users.map(u=> ( <div key={u.id} className="border p-3 rounded"> <div className="font-semibold">{u.name} {u.role==='leader' && <span className="text-xs ml-2 bg-yellow-200 px-2 rounded">Leader</span>}</div> <div className="text-xs text-gray-600">{u.email}</div> {isLeader && <div className="mt-2"><button onClick={()=>removeUser(u.id)} className="text-sm text-red-600">Remove</button></div>} </div> ))} </div> </div> ) }
-
-function Contact(){ return ( <div className="p-8"> <h2 className="font-bold text-2xl">Contact</h2> <p className="mt-4">Reach us via phone or email.</p> <div className="mt-4 flex gap-3"> <a href="tel:+254700000000" className="px-4 py-2 border rounded">Call +254 700 000 000</a> <a href="mailto:hello@imperialtechub.org" className="px-4 py-2 border rounded">Email</a> </div> </div> ) }
-
-function AuthSignup(){ const [name,setName] = useState(''); const [email,setEmail]=useState(''); const [password,setPassword]=useState(''); const [leaderPass,setLeaderPass]=useState(''); return ( <div className="p-8 max-w-xl"> <h2 className="font-bold text-2xl">Sign up</h2> <div className="mt-4 space-y-3"> <input value={name} onChange={e=>setName(e.target.value)} placeholder="Full name" className="w-full p-3 border rounded" /> <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email" className="w-full p-3 border rounded" /> <input type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Password" className="w-full p-3 border rounded" /> <input value={leaderPass} onChange={e=>setLeaderPass(e.target.value)} placeholder="Leader password (optional)" className="w-full p-3 border rounded" /> <div className="flex gap-2"> <button onClick={()=>signup({name,email,password,leaderPass})} className="px-4 py-2 bg-indigo-600 text-white rounded">Create account</button> <button onClick={()=>setPage('home')} className="px-4 py-2 border rounded">Cancel</button> </div> </div> </div> ) }
-
-function AuthLogin(){ const [email,setEmail]=useState(''); const [password,setPassword]=useState(''); return ( <div className="p-8 max-w-md"> <h2 className="font-bold text-2xl">Login</h2> <div className="mt-4 space-y-3"> <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email" className="w-full p-3 border rounded" /> <input type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Password" className="w-full p-3 border rounded" /> <div className="flex gap-2"> <button onClick={()=>login({email,password})} className="px-4 py-2 bg-indigo-600 text-white rounded">Login</button> <button onClick={()=>setPage('home')} className="px-4 py-2 border rounded">Cancel</button> </div> </div> </div> ) }
-
-function Dashboard(){ if(!user) return ( <div className="p-8">Please log in or sign up to access the dashboard.</div> ) return ( <div className="p-8"> <h2 className="font-bold text-2xl">Dashboard</h2> <p className="mt-2">Welcome back, {user.name} — Role: {user.role}</p>
-
-<div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div className="border p-4 rounded">
-        <h3 className="font-semibold">Upload Media</h3>
-        <div className="mt-3 flex flex-col gap-2">
-          <input ref={imageInputRef} type="file" accept="image/*" onChange={handleImageUpload} />
-          <input ref={videoInputRef} type="file" accept="video/*" onChange={handleVideoUpload} />
-        </div>
-      </div>
-
-      <div className="border p-4 rounded">
-        <h3 className="font-semibold">Quick Actions</h3>
-        <div className="mt-3 flex flex-col gap-2">
-          <button onClick={()=>{navigator.clipboard?.writeText(window.location.href); alert('Link copied')}} className="px-3 py-2 border rounded">Copy invite link</button>
-          <a href="tel:+254700000000" className="px-3 py-2 border rounded inline-block">Call the Hub</a>
-        </div>
-      </div>
-
-      <div className="border p-4 rounded md:col-span-2">
-        <h3 className="font-semibold">Community Feed</h3>
-        <div className="mt-3 space-y-2 max-h-56 overflow-auto">
-          {uploads.length===0 && <div className="text-gray-500">No posts yet.</div>}
-          {uploads.map(u=> (
-            <div key={u.id} className="p-2 border rounded flex items-center gap-3">
-              {u.type==='image'? <img src={u.url} alt={u.name} className="w-20 h-12 object-cover rounded"/> : <video src={u.url} className="w-40 h-24" controls />}
-              <div>
-                <div className="font-semibold">{u.name}</div>
-                <div className="text-xs text-gray-600">by {u.owner}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-    </div>
-
-    {isLeader && (
-      <div className="mt-6 border p-4 rounded bg-white">
-        <h3 className="font-semibold">Leader Controls</h3>
-        <LeaderPanel onAddAnnouncement={addAnnouncement} memberLimit={memberLimit} setMemberLimit={setMemberLimit} users={users} />
-      </div>
-    )}
-
+  <div class="event">
+    <b>Sunday Worship</b><br>
+    Every Sunday – 9:00 AM
   </div>
-)
 
-}
+  <div class="event">
+    <b>Weekly Bible Study</b><br>
+    Saturday – 3:00 PM
+  </div>
+</section>
 
-function LeaderPanel({onAddAnnouncement,memberLimit,setMemberLimit,users}){ const [text,setText]=useState(''); return ( <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4"> <div> <h4 className="font-semibold">Announcements</h4> <div className="mt-2 flex gap-2"> <input value={text} onChange={e=>setText(e.target.value)} className="w-full p-2 border rounded" placeholder="Write announcement" /> <button onClick={()=>{ if(!text) return alert('Enter text'); onAddAnnouncement(text); setText(''); }} className="px-3 py-2 bg-indigo-600 text-white rounded">Post</button> </div> </div> <div> <h4 className="font-semibold">Member Limit</h4> <div className="mt-2 flex gap-2 items-center"> <input type="number" value={memberLimit} onChange={e=>setMemberLimit(Number(e.target.value))} className="p-2 border rounded w-32" /> <div className="text-sm text-gray-600">Members currently: {users.length}</div> </div> </div> </div> ) }
+<!---------------- CONTACT ---------------->
+<section id="contact">
+  <h2>Contact Us</h2>
+  <p><b>Phone:</b> +254 7xx xxx xxx</p>
+  <p><b>Email:</b> info@pceacenterchurch.org</p>
+  <p><b>Location:</b> Near Center Area, Kenya</p>
+</section>
 
-// ------- Render area ------- return ( <div className="min-h-screen bg-gray-50 text-gray-800"> <Nav /> <main className="max-w-6xl mx-auto"> {page==='home' && <Home />} {page==='about' && <About />} {page==='projects' && <Projects />} {page==='community' && <Community />} {page==='contact' && <Contact />} {page==='signup' && <AuthSignup />} {page==='login' && <AuthLogin />} {page==='dashboard' && <Dashboard />} </main> <footer className="mt-10 p-6 text-center text-sm text-gray-600"> © {new Date().getFullYear()} Imperial TECHUB — Built with ❤️ </footer> </div> ) }
+<!---------------- LOGIN ---------------->
+<section id="login">
+  <h2>Member Login</h2>
+  <p>Enter your details to access the members section.</p>
 
-// Added Features: // - Countdown Timer Placeholder // - Full Gregorian Calendar Placeholder // - Full Bible Viewer Placeholder
+  <input type="text" id="user" placeholder="Username" style="padding:10px;width:90%;margin-bottom:10px;">
+  <input type="password" id="pass" placeholder="Password" style="padding:10px;width:90%;margin-bottom:10px;">
 
-/* LOGICAL STRUCTURE PLAN (Added for organization)
+  <button class="btn" onclick="login()">Login</button>
 
-1. Header & Navigation
+  <p id="msg" style="color:red;margin-top:10px;"></p>
+</section>
 
+<footer>
+  © 2025 PCEA Center Church • All Rights Reserved
+</footer>
 
-2. Hero Section
+<script>
+  function login() {
+    let u = document.getElementById("user").value;
+    let p = document.getElementById("pass").value;
 
+    if (u === "leader" && p === "center123") {
+      document.getElementById("msg").style.color = "green";
+      document.getElementById("msg").innerText = "Login successful!";
+      setTimeout(() => alert("Welcome Leader!"), 300);
+    } else {
+      document.getElementById("msg").innerText = "Incorrect username or password!";
+    }
+  }
+</script>
 
-3. Countdown Section
-
-
-4. Gregorian Calendar Section
-
-
-5. Bible Viewer Section
-
-
-6. Dashboard & Admin Tools
-
-
-7. Media Uploads (Images/Videos)
-
-
-8. Announcements
-
-
-9. Footer
-
-
-
-This outline will help structure the full React site into clear, manageable sections. */
+</body>
+                                  </html>
